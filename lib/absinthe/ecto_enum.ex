@@ -37,12 +37,12 @@ defmodule Absinthe.EctoEnum do
   defp do_import_ecto_enum(module, env, opts) do
     name = module |> to_string() |> String.split(".") |> List.last |> Macro.underscore |> String.to_atom()
     value_list = Enum.map(module.__enum_map__(), & &1 |> elem(0))
-
     ast = quote do
       enum unquote(name) do
-        values unquote(value_list)
+        unquote({:__block__, [], Enum.map(value_list, & {:value, [], [&1]})})
       end
     end
+    ast|>Macro.to_string|>IO.inspect
     Module.eval_quoted(env, ast)
 
     []

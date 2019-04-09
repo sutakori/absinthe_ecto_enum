@@ -18,8 +18,10 @@ defmodule Absinthe.EctoEnumTest do
   test "are loaded" do
     type = StatusSchema.__absinthe_type__(:status_enum)
     assert %Absinthe.Type.Enum{} = type
-    assert Enum.all?(type.values, fn v ->
-      EctoEnum.valid_value?(v.value)
+    IO.inspect type
+    assert map_size(type.values) > 0
+    assert Enum.all?(type.values, fn {k, v} ->
+      StatusEnum.valid_value?(v.value)
     end)
   end
 end
